@@ -1114,6 +1114,11 @@ inline static hipError_t hipSetDevice(int device) {
 }
 
 inline static hipError_t hipChooseDevice(int* device, const hipDeviceProp_t* prop) {
+
+    if (prop == nullptr) {
+        return hipCUDAErrorTohipError(cudaChooseDevice(device, nullptr));
+    }
+
     struct cudaDeviceProp cdprop;
     memset(&cdprop, 0x0, sizeof(struct cudaDeviceProp));
     cdprop.major = prop->major;
@@ -1426,6 +1431,11 @@ inline static hipError_t hipMemset3DAsync(hipPitchedPtr pitchedDevPtr, int  valu
 }
 
 inline static hipError_t hipGetDeviceProperties(hipDeviceProp_t* p_prop, int device) {
+
+    if (p_prop == nullptr) {
+        return hipErrorInvalidValue;
+    }
+
     struct cudaDeviceProp cdprop;
     cudaError_t cerror;
     cerror = cudaGetDeviceProperties(&cdprop, device);
